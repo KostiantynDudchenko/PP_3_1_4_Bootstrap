@@ -22,6 +22,6 @@ public class UserController {
     @GetMapping()
     public String pageForUser(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
-        return "adminTest";
+        return "user";
     }
 }

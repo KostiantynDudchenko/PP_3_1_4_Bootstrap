@@ -28,7 +28,7 @@ public class AdminController {
         model.addAttribute("authenticatedUser", authenticatedUser);
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("newUser", new User());
-        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("allRoles", roleService.getAllRoles());
 
         return "index";
     }
@@ -49,10 +49,10 @@ public class AdminController {
 
     @PatchMapping("/admin/{id}/edit")
     public String update(@ModelAttribute("editedUser") User editedUser,
-                         @RequestParam(value = "selectedRoles", required = false) String[] selectedRoles) {
-        if (selectedRoles != null) {
+                         @RequestParam(value = "editedRoles", required = false) String[] editedRoles) {
+        if (editedRoles != null) {
             Set<Role> roles = new HashSet<>();
-            for (String elemArrSelectedRoles : selectedRoles) {
+            for (String elemArrSelectedRoles : editedRoles) {
                 roles.add(roleService.getRoleByName(elemArrSelectedRoles));
             }
             editedUser.setRoles(roles);

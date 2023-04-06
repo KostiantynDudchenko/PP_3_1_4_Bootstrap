@@ -31,7 +31,7 @@
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Logout</a>
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
                 </li>
             </ul>
         </div>
@@ -93,10 +93,8 @@
                                          th:data-bs-target="${'#editModal' + user.id}"> Edit</a>
                                             </span>
 
-                                <!------------------------------------------------- Edit Modal ------------------------------------------------->
                                 <div class="modal fade" tabindex="-1"
                                      th:id="${'editModal' + user.id}"
-                                     th:object="${user}"
                                      aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -111,18 +109,15 @@
                                             <div class="modal-body text-center d-flex justify-content-center">
                                                 <form th:method="patch"
                                                       th:action="@{/admin/{id}/edit(id=${user.id})}"
-                                                      th:with="editedUser = ${user}"
-                                                      th:object="${editedUser}"
+                                                      th:object="${user}"
                                                       id="editModalForm">
-                                                    <!--способ определить локальные переменные - через атрибут
-                                                      th:with-->
 
                                                     <div class="form-group mb-2">
                                                         <label for="editModalUserId"
                                                                class="form-label fw-bold">ID</label>
                                                         <input type="text"
                                                                name="id"
-                                                               th:value="${editedUser.id}"
+                                                               th:value="${user.id}"
                                                                class="form-control"
                                                                id="editModalUserId"
                                                                readonly/>
@@ -133,7 +128,7 @@
                                                                class="form-label fw-bold">First Name</label>
                                                         <input type="text"
                                                                name="first_name"
-                                                               th:value="${editedUser.first_name}"
+                                                               th:value="${user.first_name}"
                                                                class="form-control"
                                                                id="editModalName"/>
                                                     </div>
@@ -143,7 +138,7 @@
                                                                class="form-label fw-bold">Last name</label>
                                                         <input type="text"
                                                                name="last_name"
-                                                               th:value="${editedUser.last_name}"
+                                                               th:value="${user.last_name}"
                                                                class="form-control "
                                                                id="editModalLastName"/>
                                                     </div>
@@ -153,7 +148,7 @@
                                                                class="form-label fw-bold">Email</label>
                                                         <input type="text"
                                                                name="email"
-                                                               th:value="${editedUser.email}"
+                                                               th:value="${user.email}"
                                                                class="form-control"
                                                                id="editModalEmail" required/>
                                                     </div>
@@ -167,7 +162,6 @@
                                                                minlength="5"
                                                                required/>
                                                     </div>
-                                                    <!--<label class="form-label fw-bold">Role</label>-->
 
                                                     <div class="row mb-4">
                                                         <label for="role-edit"
@@ -175,35 +169,18 @@
                                                         <select id="role-edit"
                                                                 class="form-select"
                                                                 multiple
-                                                                th:name="roles">
+                                                                name="editedRoles">
                                                             <option
-                                                                    th:each="role : ${roles}"
-                                                                    th:text="${role.toString()}"
-                                                                    th:value="${role.getId()}"
-                                                                    th:selected="${editedUser.roles.contains(role)}">
+                                                                    th:each="role : ${allRoles}"
+                                                                    th:text="${role.getName()}"
+                                                                    th:value="${role.getName()}"
+                                                                    th:selected="${user.roles.contains(role)}">
                                                             </option>
                                                         </select>
                                                     </div>
 
 
-                                                   <!-- <label for="editedRoles" class="form-label">Role</label>
-                                                    <select class="form-select" id="editedRoles" name="roles"
-                                                            th:size="${roles.size()}" multiple>
-                                                        <option
-                                                                th:each="role : ${roles}"
-                                                                th:selected="${role.getName().equals('ROLE_USER')}"
-                                                                th:name="${role}"
-                                                                th:text="${role}">
-                                                        </option>
-                                                    </select>-->
 
-
-                                                    <!--<select class="w-100" name="roles"
-                                                            multiple size="2" required>
-                                                        <option th:each="role : ${roles}"
-                                                                th:value="${role.getId()}"
-                                                                th:text="${role.getAuthority().replace('ROLE_', '')}"/>
-                                                    </select>-->
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">Close
@@ -218,16 +195,17 @@
                                 </div>
                             </td>
 
+                            <!--DELETE USER BUTTON-->
+
                             <td><span><a class="btn btn-info"
                                          role="button" data-bs-toggle="modal"
                                          th:data-bs-target="${'#deleteModal' + user.id}">Delete</a>
                                             </span>
 
-                                <!------------------------------------------------- Delete Modal
-                                ------------------------------------------------->
+                                <!--DELETE USER MODAL WINDOW-->
+
                                 <div class="modal fade" tabindex="-1"
                                      th:id="${'deleteModal' + user.id}"
-                                     th:object="${user}"
                                      aria-labelledby="deleteModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -242,16 +220,14 @@
                                             <div class="modal-body text-center d-flex justify-content-center">
                                                 <form th:method="delete"
                                                       th:action="@{/delete/{id}(id=${user.id})}"
-                                                      th:with="editedUser = ${user}"
-                                                      th:object="${editedUser}"
+                                                      th:object="${user}"
                                                       id="deleteModalForm">
-                                                    <!--/{id}/edit(id=${user.id})-->
                                                     <div class="form-group mb-2">
                                                         <label for="deleteModalUserId"
                                                                class="form-label fw-bold">ID</label>
                                                         <input type="text"
                                                                name="id"
-                                                               th:value="${editedUser.id}"
+                                                               th:value="${user.id}"
                                                                class="form-control"
                                                                id="deleteModalUserId"
                                                                readonly/>
@@ -262,7 +238,7 @@
                                                                class="form-label fw-bold">First Name</label>
                                                         <input type="text"
                                                                name="name"
-                                                               th:value="${editedUser.first_name}"
+                                                               th:value="${user.first_name}"
                                                                class="form-control"
                                                                id="deleteModalName"
                                                                readonly/>
@@ -273,7 +249,7 @@
                                                                class="form-label fw-bold">Last name</label>
                                                         <input type="text"
                                                                name="lastname"
-                                                               th:value="${editedUser.last_name}"
+                                                               th:value="${user.last_name}"
                                                                class="form-control "
                                                                id="deleteModalLastName"
                                                                readonly/>
@@ -284,7 +260,7 @@
                                                                class="form-label fw-bold">Age</label>
                                                         <input type="text"
                                                                name="lastname"
-                                                               th:value="${editedUser.age}"
+                                                               th:value="${user.age}"
                                                                class="form-control "
                                                                id="deleteModalAge"
                                                                readonly/>
@@ -295,7 +271,7 @@
                                                                class="form-label fw-bold">Email</label>
                                                         <input type="text"
                                                                name="email"
-                                                               th:value="${editedUser.email}"
+                                                               th:value="${user.email}"
                                                                class="form-control"
                                                                id="deleteModalEmail"
                                                                readonly/>
@@ -303,10 +279,9 @@
 
                                                     <label class="form-label fw-bold">Role</label>
                                                     <select class="w-100" name="roles"
-                                                            multiple size="2" required>
-                                                        <option th:each="role : ${roles}"
-                                                                th:value="${role.getId()}"
-                                                                th:text="${role.getAuthority().replace('ROLE_', '')}"
+                                                            multiple size="2">
+                                                        <option th:each="role : ${user.roles}"
+                                                                th:text="${role.getName()}"
                                                                 />
                                                     </select>
                                                     <div class="modal-footer">
@@ -323,16 +298,14 @@
                                 </div>
                             </td>
 
-
-
-
-
                         </tr>
                         </tbody>
                     </table>
 
-
                 </div>
+
+                <!--ADD NEW USER-->
+
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
 
                     <p><h5>Add New User</h5></p>
@@ -368,17 +341,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="roles" class="form-label">Role</label>
-                                    <select class="form-select" id="roles" name="selectedRoles"
-                                            th:size="${roles.size()}" multiple>
-                                        <option
-                                                th:each="role : ${roles}"
-                                                th:selected="${role.getName().equals('ROLE_USER')}"
-                                                th:name="${role}"
-                                                th:text="${role}">
+                                    <label for="selectedRoles" class="form-label">Выберите роли пользователя: </label>
+                                    <select multiple class="form-control" id="selectedRoles" name="selectedRoles">
+                                        <option th:each="role : ${allRoles}"
+                                                th:utext="${role.getName()}" th:value="${role.getName()}">
                                         </option>
                                     </select>
                                 </div>
+
+
                             </div>
                             <button type="submit" class="btn btn-lg btn-success">Add new user</button>
                         </form>
@@ -386,9 +357,10 @@
 
                 </div>
             </div>
-
-
         </div>
+
+        <!--USER INF PAGE-->
+
         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
              tabindex="0">
 
