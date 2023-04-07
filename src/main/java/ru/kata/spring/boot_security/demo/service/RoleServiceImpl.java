@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDAO;
 import ru.kata.spring.boot_security.demo.model.Role;
 
@@ -18,16 +19,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public void addRole(Role role) {
         roleDAO.addRole(role);
     }
 
     @Override
+    @Transactional
     public void updateRole(Role role) {
         roleDAO.updateRole(role);
     }
 
     @Override
+    @Transactional
     public void removeRoleById(long id) {
         roleDAO.removeRoleById(id);
     }

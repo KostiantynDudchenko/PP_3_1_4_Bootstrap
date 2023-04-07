@@ -47,7 +47,7 @@ public class AdminController {
         return "redirect:/index";
     }
 
-    @PatchMapping("/admin/{id}/edit")
+    @PatchMapping("/admin")
     public String update(@ModelAttribute("editedUser") User editedUser,
                          @RequestParam(value = "editedRoles", required = false) String[] editedRoles) {
         if (editedRoles != null) {
@@ -64,8 +64,14 @@ public class AdminController {
     // Удаление юзера
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
-        userService.delete(id);
+        userService.delete(userService.getUserById(id));
         return "redirect:/index";
     }
 
+
+    @GetMapping("/user")
+    public String pageForUser(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        return "user";
+    }
 }

@@ -17,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getUsers() {
-        return entityManager.createQuery("select u from User u left join fetch u.roles", User.class).getResultList();
+        return entityManager.createQuery("select distinct u from User u left join fetch u.roles", User.class).getResultList();
     }
 
     @Override
@@ -35,14 +35,16 @@ public class UserDAOImpl implements UserDAO {
         entityManager.merge(user);
     }
 
+
     @Override
-    public void deleteUser(Long id) {
-        entityManager.remove(entityManager.contains(getUserById(id)) ? getUserById(id) : entityManager.merge(getUserById(id)));
+    public void deleteUser(User user) {
+        entityManager.remove(entityManager.contains(user) ? user
+                : entityManager.merge(user));
     }
 
     @Override
     public User findUserByName(String first_name) {
-        TypedQuery<User> queryUser = entityManager.createQuery("select u from User u left join fetch u.roles where u.first_name=:first_name",
+        TypedQuery<User> queryUser = entityManager.createQuery("select distinct u from User u left join fetch u.roles where u.first_name=:first_name",
                 User.class).setParameter("first_name", first_name);
         return queryUser.getSingleResult();
     }
